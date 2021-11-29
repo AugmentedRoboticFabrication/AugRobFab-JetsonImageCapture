@@ -7,7 +7,7 @@ class Recorder:
 	def __init__(self, gui, rec_config):
 		self.counter = 0
 		self.gui = gui
-		self.vis = None
+		# self.vis = None
 
 		# OS Variables
 		self.dir = os.getcwd()
@@ -24,13 +24,13 @@ class Recorder:
 
 	def start(self, fn):
 		self.counter = 0
-		if self.gui:
-			self.vis = o3d.visualization.Visualizer()
+		# if self.gui:
+			# self.vis = o3d.visualization.Visualizer()
 			
-			self.vis.create_window()
+			# self.vis.create_window()
 
-			rgbd = self.recorder.record_frame(False, self.align)
-			self.vis.add_geometry(rgbd)
+			# rgbd = self.recorder.record_frame(False, self.align)
+			# self.vis.add_geometry(rgbd)
 
 		if not self.recorder.is_record_created():
 			if not os.path.exists('{}/{}'.format(self.dir,fn)):
@@ -44,19 +44,19 @@ class Recorder:
 		rgbd = self.recorder.record_frame(True,self.align)
 		print('Done!')
 		
-		if self.gui:
-			self.vis.update_geometry(rgbd)
-			self.vis.update_renderer()
+		# if self.gui:
+		# 	self.vis.update_geometry(rgbd)
+		# 	self.vis.update_renderer()
 
 		self.counter += 1
 
-		return True
+		return rgbd
 
 	def end(self):
 		if self.recorder.is_record_created():
 			self.recorder.close_record()
 		
-		if self.gui:
-			self.vis.destroy_window()
-			self.vis = None
+		# if self.gui:
+		# 	self.vis.destroy_window()
+		# 	self.vis = None
 		
