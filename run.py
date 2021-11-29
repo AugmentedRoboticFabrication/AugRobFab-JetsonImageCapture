@@ -28,6 +28,10 @@ if __name__ == '__main__':
 			curPin15 = GPIO.input(15)
 			curPin16 = GPIO.input(16)
 
+			print("Pin 15: %d" % curPin15)
+			print("Pin 16: %d" % curPin16)
+			print('------------------')
+
 			# if pin15 1->0 | DO 0->1 (start recording)
 			if pin15 and not curPin15:
 				fn = config.fn + '_%d' % round(time.time())
@@ -41,7 +45,7 @@ if __name__ == '__main__':
 
 			pin15 = curPin15
 			pin16 = curPin16
-			
+
 		GPIO.cleanup()
 	except KeyboardInterrupt:
 		GPIO.cleanup()
