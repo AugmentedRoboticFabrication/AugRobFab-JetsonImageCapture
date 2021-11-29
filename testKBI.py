@@ -32,4 +32,4 @@ try:
 			time.sleep(.1)
 	except KeyboardInterrupt:
 		GPIO.cleanup()
-		print("\nForced quit.")
+		print('\nForced quit.')
