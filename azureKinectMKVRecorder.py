@@ -55,6 +55,8 @@ class Recorder:
 			self.vis.update_geometry(rgbd)
 			self.vis.update_renderer()
 
+		self.counter += 1
+
 		return True
 
 	def end(self, out_dir):
