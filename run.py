@@ -29,13 +29,8 @@ if __name__ == '__main__':
 			curPin15 = GPIO.input(15)
 			curPin16 = GPIO.input(16)
 
-			# print('Pin 15: %d' % curPin15)
-			# print('Pin 16: %d' % curPin16)
-			# print('------------------')
-
 			# if pin15 1->0 | DO 0->1 (start recording)
 			if pin15 and not curPin15:
-				# print('start recording')
 				fn = config.fn + '_%d' % round(time.time())
 				recorder.start(fn)
 			# if pin15 0->1 | DO 1->0 (end recording)
@@ -44,7 +39,6 @@ if __name__ == '__main__':
 				recorder.end()
 			# if pin15=0 | DO 1 && pin16 1->0 (capture frame)
 			if not curPin15 and (pin16 and not curPin16):
-				# print('record frame')
 				recorder.recordFrame()
 
 			pin15 = curPin15

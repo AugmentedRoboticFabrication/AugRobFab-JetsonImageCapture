@@ -59,7 +59,7 @@ class Recorder:
 
 		return True
 
-	def end(self, out_dir):
+	def end(self):
 		print('Saving recording...', end='')
 		if self.recorder.is_record_created():
 			self.recorder.close_record()
