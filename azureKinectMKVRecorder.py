@@ -16,7 +16,7 @@ class Recorder:
 			self.vis = o3d.visualization.VisualizerWithKeyCallback()
 
 		# Azure Kinect Config
-		self.rec_config = o3d.io.read_azure_kinect_sensor_config('{}\\{}'.format(self.dir, rec_config))
+		self.rec_config = o3d.io.read_azure_kinect_sensor_config('{}/{}'.format(self.dir, rec_config))
 
 		
 		self.recorder = o3d.io.AzureKinectRecorder(self.rec_config, 0)
@@ -28,9 +28,9 @@ class Recorder:
 	def start(self, fn):
 		print('Initiating Recorder...', end='')
 		if not self.recorder.is_record_created():
-			if not os.path.exists('{}\\{}'.format(self.dir,fn)):
-				os.mkdir('{}\\{}'.format(self.dir,fn))
-			if self.recorder.open_record('{}\\{}\\capture.mkv'.format(self.dir,fn)):
+			if not os.path.exists('{}/{}'.format(self.dir,fn)):
+				os.mkdir('{}/{}'.format(self.dir,fn))
+			if self.recorder.open_record('{}/{}/capture.mkv'.format(self.dir,fn)):
 				print('Success!')
 			else:
 				print('Fail!')
