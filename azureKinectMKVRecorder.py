@@ -7,6 +7,7 @@ class Recorder:
 	def __init__(self, gui, rec_config):
 		self.counter = 0
 		self.gui = gui
+		self.vis = None
 
 		# OS Variables
 		self.dir = os.getcwd()
@@ -57,4 +58,5 @@ class Recorder:
 		
 		if self.gui:
 			self.vis.destroy_window()
+			self.vis = None
 		
