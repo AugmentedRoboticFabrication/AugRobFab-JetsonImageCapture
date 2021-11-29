@@ -34,9 +34,9 @@ if __name__ == '__main__':
 
 			# if pin15 1->0 | DO 0->1 (start recording)
 			if pin15 and not curPin15:
-				# fn = config.fn + '_%d' % round(time.time())
-				print('start recording')
-				# recorder.start(fn)
+				# print('start recording')
+				fn = config.fn + '_%d' % round(time.time())
+				recorder.start(fn)
 			# if pin15 0->1 | DO 1->0 (end recording)
 			if not pin15 and curPin15:
 				print('end recording')
