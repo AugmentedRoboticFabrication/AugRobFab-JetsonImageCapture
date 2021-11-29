@@ -3,7 +3,7 @@ from configargparse import ArgParser
 
 import open3d as o3d
 
-class azureKinectMKVRecorder:
+class Recorder:
 	def __init__(self, fn, gui, rec_config, out_dir):
 		#Global variables
 		self.exit = False
@@ -91,6 +91,6 @@ if __name__ == '__main__':
 	config = parser.parse_args()
 	print(config.no_gui)
 
-	recorder = azureKinectMKVRecorder(config.fn, config.no_gui, config.rec_config, config.out_dir)
+	recorder = Recorder(config.fn, config.no_gui, config.rec_config, config.out_dir)
 	recorder.run()
 
