@@ -26,12 +26,16 @@ class Recorder:
 		self.align = True
 
 	def start(self, fn):
+		self.counter = 0
+		if self.gui:
+			self.vis.create_window('AzureKinectRecorder', 640, 480)
+
 		if not self.recorder.is_record_created():
 			if not os.path.exists('{}/{}'.format(self.dir,fn)):
 				os.mkdir('{}/{}'.format(self.dir,fn))
 			self.recorder.open_record('{}/{}/capture.mkv'.format(self.dir,fn))
+
 		
-		self.counter = 0
 
 	def recordFrame(self):
 		print('Recording frame %03d...'% self.counter, end='')		
@@ -52,3 +56,7 @@ class Recorder:
 	def end(self):
 		if self.recorder.is_record_created():
 			self.recorder.close_record()
+		
+		if self.gui:
+			self.vis.destroy_window()
+		
