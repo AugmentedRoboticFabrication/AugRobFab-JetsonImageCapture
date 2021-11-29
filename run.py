@@ -39,9 +39,10 @@ if __name__ == '__main__':
 			if not curPin15 and (pin16 and not curPin16):
 				recorder.recordFrame()
 
-
 			pin15 = curPin15
 			pin16 = curPin16
+			
+		GPIO.cleanup()
 	except KeyboardInterrupt:
 		GPIO.cleanup()
 		print('\nForced quit.')
