@@ -13,7 +13,7 @@ class Recorder:
 		# O3D Config 
 		self.gui = gui
 		if self.gui:
-			self.vis = o3d.visualization.VisualizerWithKeyCallback()
+			self.vis = o3d.visualization.Visualizer()
 
 		# Azure Kinect Config
 		self.rec_config = o3d.io.read_azure_kinect_sensor_config('{}/{}'.format(self.dir, rec_config))
@@ -28,7 +28,7 @@ class Recorder:
 	def start(self, fn):
 		self.counter = 0
 		if self.gui:
-			self.vis.create_window('AzureKinectRecorder', 640, 480)
+			self.vis.create_window()#'AzureKinectRecorder', 640, 480)
 
 		if not self.recorder.is_record_created():
 			if not os.path.exists('{}/{}'.format(self.dir,fn)):
