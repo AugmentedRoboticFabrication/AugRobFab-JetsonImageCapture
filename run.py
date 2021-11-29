@@ -14,18 +14,16 @@ if __name__ == '__main__':
 	
 	config = parser.parse_args()
 
-	GPIO.cleanup()
 	GPIO.setmode(GPIO.BOARD)
 	GPIO.setup(15, GPIO.IN)
 	GPIO.setup(16, GPIO.IN)
 	
-	recorder = Recorder(fn, config.no_gui, config.rec_config, config.out_dir)
-
-
 	try:
+		recorder = Recorder(config.no_gui, config.rec_config)
+
 		pin15 = GPIO.input(15)
 		pin16 = GPIO.input(16)
-		
+
 		while True:
 			curPin15 = GPIO.input(15)
 			curPin16 = GPIO.input(16)
