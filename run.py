@@ -24,8 +24,8 @@ if __name__ == '__main__':
 		pin15 = GPIO.input(15)
 		pin16 = GPIO.input(16)
 
+		print('Waiting for DO signal to start recording...')
 		while True:
-			print('Waiting for DO signal...')
 			curPin15 = GPIO.input(15)
 			curPin16 = GPIO.input(16)
 
