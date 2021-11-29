@@ -21,10 +21,11 @@ if __name__ == '__main__':
 	
 	recorder = Recorder(fn, config.no_gui, config.rec_config, config.out_dir)
 
-	pin15 = GPIO.input(15)
-	pin16 = GPIO.input(16)
 
 	try:
+		pin15 = GPIO.input(15)
+		pin16 = GPIO.input(16)
+		
 		while True:
 			curPin15 = GPIO.input(15)
 			curPin16 = GPIO.input(16)

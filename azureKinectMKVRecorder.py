@@ -1,4 +1,4 @@
-import os, datetime, keyboard
+import os
 from configargparse import ArgParser
 
 import open3d as o3d
@@ -28,7 +28,9 @@ class Recorder:
 	def start(self, fn):
 		print('Initiating Recorder...', end='')
 		if not self.recorder.is_record_created():
-			if self.recorder.open_record('{}\\{}\\capture.mkv'.format(self.dir,self.fn)):
+			if not os.path.exists('{}\\{}'.format(self.dir,fn)):
+				os.mkdir('{}\\{}'.format(self.dir,fn))
+			if self.recorder.open_record('{}\\{}\\capture.mkv'.format(self.dir,fn)):
 				print('Success!')
 			else:
 				print('Fail!')
