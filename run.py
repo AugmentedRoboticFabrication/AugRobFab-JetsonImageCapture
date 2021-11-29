@@ -51,3 +51,4 @@ if __name__ == '__main__':
 		print('\nForced quit.')
 	except:
 		GPIO.cleanup()
+		print('something happened')
