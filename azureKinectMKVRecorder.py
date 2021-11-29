@@ -30,6 +30,8 @@ class Recorder:
 			if not os.path.exists('{}/{}'.format(self.dir,fn)):
 				os.mkdir('{}/{}'.format(self.dir,fn))
 			self.recorder.open_record('{}/{}/capture.mkv'.format(self.dir,fn))
+		
+		self.counter = 0
 
 	def recordFrame(self):
 		print('Recording frame %03d...'% self.counter, end='')		
