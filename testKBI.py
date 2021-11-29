@@ -33,3 +33,5 @@ try:
 	except KeyboardInterrupt:
 		GPIO.cleanup()
 		print('\nForced quit.')
+	except:
+		GPIO.cleanup()
