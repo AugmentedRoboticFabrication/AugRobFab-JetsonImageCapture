@@ -40,7 +40,7 @@ if __name__ == '__main__':
 				recorder.start(fn)
 			# if pin15 0->1 | DO 1->0 (end recording)
 			if not pin15 and curPin15:
-				# print('end recording')
+				print('end recording')
 				recorder.end()
 			# if pin15=0 | DO 1 && pin16 1->0 (capture frame)
 			if not curPin15 and (pin16 and not curPin16):
