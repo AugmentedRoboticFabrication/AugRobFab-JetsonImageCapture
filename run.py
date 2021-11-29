@@ -34,19 +34,19 @@ if __name__ == '__main__':
 
 			# if pin15 1->0 | DO 0->1 (start recording)
 			if pin15 and not curPin15:
-				fn = config.fn + '_%d' % round(time.time())
-				recorder.start(fn)
+				# fn = config.fn + '_%d' % round(time.time())
+				print("start recording")
+				# recorder.start(fn)
 			# if pin15 0->1 | DO 1->0 (end recording)
 			if not pin15 and curPin15:
-				recorder.end()
+				# recorder.end()
 			# if pin15=0 | DO 1 && pin16 1->0 (capture frame)
 			if not curPin15 and (pin16 and not curPin16):
-				recorder.recordFrame()
+				# recorder.recordFrame()
 
 			pin15 = curPin15
 			pin16 = curPin16
 
-		GPIO.cleanup()
 	except KeyboardInterrupt:
 		GPIO.cleanup()
 		print('\nForced quit.')
