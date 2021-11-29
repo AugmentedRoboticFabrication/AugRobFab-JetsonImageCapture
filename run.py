@@ -37,7 +37,10 @@ if __name__ == '__main__':
 				# if pin15 0->1 | DO 1->0 (end recording)
 				if not pin15 and curPin15:
 					recorder.end()
+
+					vis.destroy_window()
 					vis = None
+
 					isRecording = False
 					geoAdded = False
 					print('---------------')
@@ -57,6 +60,7 @@ if __name__ == '__main__':
 					fn = config.fn + '_%d' % round(time.time())
 					recorder.start(fn)
 					vis = o3d.visualization.Visualizer()
+					vis.create_window()
 					isRecording = True
 
 			pin15 = curPin15
