@@ -35,6 +35,7 @@ if __name__ == '__main__':
 				if not pin15 and curPin15:
 					recorder.end()
 					isRecording = False
+					print('---------------')
 
 				# if pin15=0 | DO 1 && pin16 1->0 (capture frame)
 				if not curPin15 and (pin16 and not curPin16):
