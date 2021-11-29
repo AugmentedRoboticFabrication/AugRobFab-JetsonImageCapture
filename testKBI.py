@@ -1,14 +1,11 @@
 import time
 import RPi.GPIO as GPIO
 
+GPIO.setmode(GPIO.BOARD)
+GPIO.setup(15, GPIO.IN)
+GPIO.setup(16, GPIO.IN)
 
 try:
-	GPIO.cleanup()
-	GPIO.setmode(GPIO.BOARD)
-	GPIO.setup(15, GPIO.IN)
-	GPIO.setup(16, GPIO.IN)
-	
-
 	pin15 = GPIO.input(15)
 	pin16 = GPIO.input(16)
 
@@ -16,7 +13,7 @@ try:
 		while True:
 			curPin15 = GPIO.input(15)
 			curPin16 = GPIO.input(16)
-			
+
 			print("Pin 15: %d" % curPin15)
 			print("Pin 16: %d" % curPin16)
 
@@ -31,5 +28,8 @@ try:
 				print('record frame')
 			pin15 = curPin15
 			pin16 = curPin16
+
+			time.sleep(.1)
 	except KeyboardInterrupt:
-		print("Forced quit.")
+		GPIO.cleanup()
+		print("\nForced quit.")
