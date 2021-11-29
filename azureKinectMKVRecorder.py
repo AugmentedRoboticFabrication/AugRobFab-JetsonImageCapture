@@ -26,25 +26,13 @@ class Recorder:
 		self.align = True
 
 	def start(self, fn):
-		print('Initiating Recorder...', end='')
 		if not self.recorder.is_record_created():
 			if not os.path.exists('{}/{}'.format(self.dir,fn)):
 				os.mkdir('{}/{}'.format(self.dir,fn))
-			if self.recorder.open_record('{}/{}/capture.mkv'.format(self.dir,fn)):
-				print('Success!')
-			else:
-				print('Fail!')
-				# raise RuntimeError('Failed to open MKV file.')
-		else:
-			print('Fail!')
-			# raise RuntimeError('Another recording is already open.')
+			self.recorder.open_record('{}/{}/capture.mkv'.format(self.dir,fn)):
 
 	def recordFrame(self):
-		print('Recording frame %03d...'% self.counter, end='')
-		if not self.recorder.is_record_created():
-			print('Fail!')
-			# raise RuntimeError('No created recording.')
-		
+		print('Recording frame %03d...'% self.counter, end='')		
 		rgbd = self.recorder.record_frame(True,self.align)
 		print('Success!')
 		
@@ -60,10 +48,5 @@ class Recorder:
 		return True
 
 	def end(self):
-		print('Saving recording...', end='')
 		if self.recorder.is_record_created():
 			self.recorder.close_record()
-			print('Success!')
-		else:
-			print('Fail!')
-			# raise RuntimeError('No created recording.')

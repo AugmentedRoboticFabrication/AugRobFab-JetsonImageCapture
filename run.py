@@ -19,6 +19,7 @@ if __name__ == '__main__':
 	GPIO.setup(16, GPIO.IN)
 	
 	try:
+		print(config.no_gui)
 		recorder = Recorder(config.no_gui, config.rec_config)
 
 		pin15 = GPIO.input(15)
@@ -51,4 +52,4 @@ if __name__ == '__main__':
 		print('\nForced quit.')
 	except:
 		GPIO.cleanup()
-		print('something happened')
+		print('try failed.')
