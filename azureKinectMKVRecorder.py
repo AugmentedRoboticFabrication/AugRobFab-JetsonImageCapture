@@ -41,12 +41,9 @@ class Recorder:
 	def recordFrame(self):
 		print('Recording frame %03d...'% self.counter, end='')		
 		rgbd = self.recorder.record_frame(True,self.align)
-		print('Success!')
+		print('Done!')
 		
 		if self.gui:
-			if self.counter == 0:
-				self.vis.add_geometry(rgbd)
-
 			self.vis.update_geometry(rgbd)
 			self.vis.update_renderer()
 
