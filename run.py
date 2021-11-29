@@ -1,4 +1,4 @@
-import os, datetime, keyboard
+import time
 from configargparse import ArgParser
 import RPi.GPIO as GPIO
 
@@ -28,9 +28,9 @@ if __name__ == '__main__':
 			curPin15 = GPIO.input(15)
 			curPin16 = GPIO.input(16)
 
-			print('Pin 15: %d' % curPin15)
-			print('Pin 16: %d' % curPin16)
-			print('------------------')
+			# print('Pin 15: %d' % curPin15)
+			# print('Pin 16: %d' % curPin16)
+			# print('------------------')
 
 			# if pin15 1->0 | DO 0->1 (start recording)
 			if pin15 and not curPin15:
@@ -48,6 +48,8 @@ if __name__ == '__main__':
 
 			pin15 = curPin15
 			pin16 = curPin16
+
+			time.sleep(.1)
 
 	except KeyboardInterrupt:
 		GPIO.cleanup()
