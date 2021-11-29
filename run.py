@@ -25,6 +25,7 @@ if __name__ == '__main__':
 		pin16 = GPIO.input(16)
 
 		while True:
+			print('Waiting for DO signal...')
 			curPin15 = GPIO.input(15)
 			curPin16 = GPIO.input(16)
 
@@ -50,6 +51,7 @@ if __name__ == '__main__':
 			pin16 = curPin16
 
 			time.sleep(.1)
+
 	except KeyboardInterrupt:
 		GPIO.cleanup()
 		print('\nForced quit.')

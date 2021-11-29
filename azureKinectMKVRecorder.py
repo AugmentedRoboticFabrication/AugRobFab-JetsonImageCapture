@@ -64,4 +64,4 @@ class Recorder:
 			print('Success!')
 		else:
 			print('Fail!')
-			raise RuntimeError('No created recording.')
+			# raise RuntimeError('No created recording.')
