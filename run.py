@@ -8,7 +8,7 @@ from azureKinectMKVRecorder import Recorder
 if __name__ == '__main__':
 	parser = ArgParser()
 	parser.add('--fn', default='capture')
-	parser.add('--gui', action='store_true')
+	parser.add('--no_gui', action='store_false')
 	parser.add('--rec_config', help='relative path to rec_config.json file.', default='rec_config.json')
 	parser.add('--out_dir', default=None)
 	
