@@ -8,7 +8,7 @@ from azureKinectMKVRecorder import Recorder
 if __name__ == '__main__':
 	parser = ArgParser()
 	parser.add('--fn', default='capture')
-	parser.add('--no_gui', action='store_false')
+	parser.add('--gui', action='store_true')
 	parser.add('--rec_config', help='relative path to rec_config.json file.', default='rec_config.json')
 	parser.add('--out_dir', default=None)
 	
@@ -19,8 +19,8 @@ if __name__ == '__main__':
 	GPIO.setup(16, GPIO.IN)
 	
 	try:
-		print(config.no_gui)
-		recorder = Recorder(config.no_gui, config.rec_config)
+		print(config.gui)
+		recorder = Recorder(config.gui, config.rec_config)
 
 		pin15 = GPIO.input(15)
 		pin16 = GPIO.input(16)
