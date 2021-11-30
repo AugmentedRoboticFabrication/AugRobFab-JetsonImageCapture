@@ -47,7 +47,7 @@ if __name__ == '__main__':
 
 				# if pin15=0 | DO 1 && pin16 1->0 (capture frame)
 				if not curPin15 and (pin16 and not curPin16):
-					rgbd = recorder.recordFrame()
+					rgbd = recorder.frame()
 					if not geoAdded:
 						vis.add_geometry(rgbd)
 						geoAdded = True
@@ -59,8 +59,13 @@ if __name__ == '__main__':
 				if pin15 and not curPin15:
 					fn = config.fn + '_%d' % round(time.time())
 					recorder.start(fn)
+					rgbd = recorder.frame(record=False)
 					vis = o3d.visualization.Visualizer()
+					
 					vis.create_window()
+					vis.add_geometry(rgbd)
+					vis.update_renderer()
+					
 					isRecording = True
 
 			pin15 = curPin15
