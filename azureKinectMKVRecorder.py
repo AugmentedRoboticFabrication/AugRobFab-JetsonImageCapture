@@ -8,6 +8,7 @@ class Recorder:
 		self.counter = 0
 		self.gui = gui
 		self.vis = None
+		self.vis_geometry_added = False
 
 		# OS Variables
 		self.dir = os.getcwd()
@@ -41,9 +42,10 @@ class Recorder:
 		print('Done!')
 		
 		if self.gui:
-			if self.counter == 0:
+			if not self.vis_geometry_added:
 				self.vis.add_geometry(rgbd)
-			self.vis.update_geometry(rgbd)
+			else:
+				self.vis.update_geometry(rgbd)
 			self.vis.update_renderer()
 
 		self.counter += 1
