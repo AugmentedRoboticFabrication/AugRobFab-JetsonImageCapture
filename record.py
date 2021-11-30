@@ -49,7 +49,7 @@ class azureKinectMKVRecorder:
 			self.recorder.close_record()
 		if self.gui:
 			self.vis.clear_geometries()
-			self.vis.destroy_window()
+			self.vis.close()
 		self.counter = 0
 		return False
 
@@ -78,7 +78,6 @@ class azureKinectMKVRecorder:
 			self.vis.register_key_callback(256, self.exit)
 
 			self.vis.create_window()
-			self.vis.run()
 		
 		try:
 			pin15 = GPIO.input(15)
