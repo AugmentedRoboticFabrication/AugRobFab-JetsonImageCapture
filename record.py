@@ -30,11 +30,10 @@ class azureKinectMKVRecorder:
 		
 		#Azure Config
 		self.rec_config = o3d.io.read_azure_kinect_sensor_config('{}/{}'.format(self.dir, rec_config))
-
 		
 		self.recorder = o3d.io.AzureKinectRecorder(self.rec_config, 0)
 		if not self.recorder.init_sensor():
-			raise RuntimeError('Failed to connect to sensor')
+			raise RuntimeError('Failed to connect to sensor.')
 		
 		self.align = True
 
@@ -111,7 +110,8 @@ class azureKinectMKVRecorder:
 				pin16 = curPin16
 
 				time.sleep(.1)
-
+			GPIO.cleanup()
+			print('Bye!')
 		except KeyboardInterrupt:
 			GPIO.cleanup()
 			print('\nBye!')
