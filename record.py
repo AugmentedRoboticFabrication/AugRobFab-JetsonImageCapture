@@ -22,23 +22,23 @@ class azureKinectMKVRecorder:
 
 		#OS variables
 		self.fn = fn
-		self.dir = os.getcwd()
-		self.abspath = "%s/%s" % (self.dir,self.fn)
+		self.root = os.getcwd()
+		self.out_dir = None
 		
 		# External Backup Config
-		self.out_dir = None
+		self.copy_root = None
 		mediaList = os.listdir('/media/nano')
 		mediaList.remove('L4T-README')
 		if len(mediaList) == 0:
 			print('No External USB storage device found. Falling back to CWD.')
 		elif len(mediaList) == 1:
-			self.out_dir = '/media/nano/%s' % mediaList[0]
+			self.copy_root = '/media/nano/%s' % mediaList[0]
 			print('Found External USB storage device for backup: %s.' % mediaList[0])
 		else:
 			print('Multiple External USB storage devices found. Falling back to CWD.')
 		
 		#Azure Config
-		self.rec_config = o3d.io.read_azure_kinect_sensor_config('%s/%s' % (self.dir, rec_config))
+		self.rec_config = o3d.io.read_azure_kinect_sensor_config('%s/%s' % (self.root, rec_config))
 		
 		self.recorder = o3d.io.AzureKinectRecorder(self.rec_config, 0)
 		if not self.recorder.init_sensor():
@@ -47,12 +47,13 @@ class azureKinectMKVRecorder:
 		self.align = True
 
 	def start(self):
-			fn = self.fn + '_%d' % round(time.time())
+			self.out_dir = self.fn + '_%d' % round(time.time())
 			if not self.recorder.is_record_created():
-				if not os.path.exists('%s/%s' % (self.dir,fn)):
-					os.mkdir('%s/%s' % (self.dir,fn))
-				self.recorder.open_record('%s/%s/capture.mkv' % (self.dir,fn))
-			print('Starting Recording: %s' % fn)
+				if not os.path.exists('%s/%s' % (self.root,self.out_dir)):
+					os.mkdir('%s/%s' % (self.root,self.out_dir))
+				self.recorder.open_record('%s/%s/capture.mkv' % (self.root,self.out_dir))
+			print('Starting Recording: %s' % self.out_dir)
+
 	def end(self):
 		if self.recorder.is_record_created():
 			self.recorder.close_record()
@@ -62,10 +63,12 @@ class azureKinectMKVRecorder:
 		self.counter = 0
 
 		# Copy capture to external USB storage device
-		if self.out_dir is not None:
-			print("Backing up capture to %s..."% self.out_dir, end="")
-			shutil.copytree('%s/%s' % (self.dir,fn), self.out_dir) 
+		if self.copy_root is not None:
+			print("Backing up capture to %s..."% self.copy_root, end="")
+			shutil.copytree('%s/%s' % (self.root, self.out_dir),
+							'%s/%s' % (self.copy_root, self.out_dir))
 			print("Done!")
+		self.out_dir = None
 
 		return False
 
