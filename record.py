@@ -76,8 +76,7 @@ class azureKinectMKVRecorder:
 
 	def run(self):
 		if self.gui:
-			if self.key:
-				self.vis.register_key_callback(256, self.exit)
+			self.vis.register_key_callback(256, self.exit)
 
 			self.vis.create_window()
 		
