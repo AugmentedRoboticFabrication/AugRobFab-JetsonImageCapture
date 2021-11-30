@@ -52,6 +52,7 @@ class azureKinectMKVRecorder:
 		if self.gui:
 			self.vis.clear_geometries()
 			self.vis.destroy_window()
+			self.vis.close()
 		self.counter = 0
 
 	def frame(self):
