@@ -50,9 +50,9 @@ class azureKinectMKVRecorder:
 	def start(self):
 			self.out_dir = self.fn + '_%d' % round(time.time())
 			if not self.recorder.is_record_created():
-				if not os.path.exists('%s/%s' % (self.root,self.out_dir)):
-					os.mkdir('%s/%s' % (self.root,self.out_dir))
-				self.recorder.open_record('%s/%s/capture.mkv' % (self.root,self.out_dir))
+				if not os.path.exists('%s/out/%s' % (self.root,self.out_dir)):
+					os.mkdir('%s/out/%s' % (self.root,self.out_dir))
+				self.recorder.open_record('%s/out/%s/capture.mkv' % (self.root,self.out_dir))
 			print('Starting Recording: %s' % self.out_dir)
 
 	def end(self):
@@ -68,7 +68,7 @@ class azureKinectMKVRecorder:
 			print("Backing up capture to %s..."% self.copy_root, end="")
 			if os.path.exists(self.copy_root):
 				shutil.copytree('%s/%s' % (self.root, self.out_dir),
-							'%s/%s' % (self.copy_root, self.out_dir))
+							'%s/out/%s' % (self.copy_root, self.out_dir))
 				print("Done!")
 			else:
 				print("Failed!")
