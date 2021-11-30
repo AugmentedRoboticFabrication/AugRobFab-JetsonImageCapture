@@ -1,4 +1,4 @@
-import time
+import time, os
 from configargparse import ArgParser
 import RPi.GPIO as GPIO
 import open3d as o3d
