@@ -25,11 +25,7 @@ class Recorder:
 		self.counter = 0
 		if self.gui:
 			self.vis = o3d.visualization.Visualizer()
-			
-			self.vis.create_window()
-
-			rgbd = self.recorder.record_frame(False, self.align)
-			self.vis.add_geometry(rgbd)
+			self.vis.create_window("Azure Kinect")
 
 		if not self.recorder.is_record_created():
 			if not os.path.exists('{}/{}'.format(self.dir,fn)):
@@ -44,6 +40,8 @@ class Recorder:
 		print('Done!')
 		
 		if self.gui:
+			if self.counter == 0:
+				self.vis.add_geometry(rgbd)
 			self.vis.update_geometry(rgbd)
 			self.vis.update_renderer()
 
@@ -57,4 +55,6 @@ class Recorder:
 		
 		if self.gui:
 			self.vis.destroy_window()
+		
+		self.counter = 0
 		
