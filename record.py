@@ -44,15 +44,16 @@ class azureKinectMKVRecorder:
 					os.mkdir('{}/{}'.format(self.dir,fn))
 				self.recorder.open_record("{}/{}/capture.mkv".format(self.dir,fn))
 			print('Starting Recording: %s' % fn)
-			self.vis.create_window()
+
+			self.vis.create_window("Azure Kinect | ForMat Lab")
 
 	def end(self):
 		if self.recorder.is_record_created():
 			self.recorder.close_record()
 		if self.gui:
-			self.vis.clear_geometries()
+			# self.vis.clear_geometries()
 			self.vis.destroy_window()
-			self.vis.close()
+			# self.vis.close()
 		self.counter = 0
 
 	def frame(self):
