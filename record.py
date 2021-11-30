@@ -82,8 +82,10 @@ class azureKinectMKVRecorder:
 		try:
 			pin15 = GPIO.input(15)
 			pin16 = GPIO.input(16)
-			
-			print('*Waiting for DO Signal*')
+			if self.gui:
+				print('Press ESC or CTRL+C to exit.')
+			else:
+				print('CTRL+C to exit.')
 			while self.isRunning:
 				curPin15 = GPIO.input(15)
 				curPin16 = GPIO.input(16)
