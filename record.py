@@ -85,6 +85,6 @@ if __name__ == '__main__':
 
 	config = parser.parse_args()
 
-	recorder = azureKinectMKVRecorder(config.fn, config.no_gui, config.rec_config, config.out_dir)
+	recorder = azureKinectMKVRecorder(config.fn, config.gui, config.rec_config, config.out_dir)
 	recorder.run()
 
