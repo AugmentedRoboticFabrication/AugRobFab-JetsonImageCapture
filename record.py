@@ -44,7 +44,7 @@ class azureKinectMKVRecorder:
 				if not os.path.exists('{}/{}'.format(self.dir,fn)):
 					os.mkdir('{}/{}'.format(self.dir,fn))
 				self.recorder.open_record("{}/{}/capture.mkv".format(self.dir,fn))
-			print('%s recording started' % fn)
+			print('Starting Recording: %s' % fn)
 	def end(self):
 		if self.recorder.is_record_created():
 			self.recorder.close_record()
@@ -94,12 +94,12 @@ class azureKinectMKVRecorder:
 				if self.isRecording:
 					# if pin15 0->1 | DO 1->0 (end recording)
 					if not pin15 and curPin15:
-						self.end(None)
+						self.end()
 						self.isRecording = False
 
 					# if pin15=0 | DO 1 && pin16 1->0 (capture frame)
 					if not curPin15 and (pin16 and not curPin16):
-						self.frame(None)
+						self.frame()
 				else:
 					# if pin15 1->0 | DO 0->1 (start recording)
 					if pin15 and not curPin15:
