@@ -34,19 +34,20 @@ class azureKinectMKVRecorder:
 		self.align = True
 
 	def start(self):
-		pass
+			if not self.recorder.is_record_created():
+				self.recorder.open_record("{}/{}/capture.mkv".format(self.dir,self.fn))
+
 	def end(self, vis):
 		if self.recorder.is_record_created():
 			self.recorder.close_record()
 			self.record = False
+
+		self.vis.close()
+		self.vis.clear_geometries()
+
 		self.isRunning = False
 		return False
-
 	def frame(self, vis):
-		if not self.recorder.is_record_created():
-			if self.recorder.open_record("{}/{}/capture.mkv".format(self.dir,self.fn)):
-				self.record = True
-
 		print("Recording frame %03d..."%self.counter, end="")
 		rgbd = self.recorder.record_frame(True,self.align)
 		print("Done!")
@@ -71,7 +72,7 @@ class azureKinectMKVRecorder:
 			self.vis.register_key_callback(256, self.end)
 
 			self.vis.create_window()
-
+		print('Init complete. Waiting for DO Signal.')
 		while self.isRunning:
 			try:
 				if self.gui:
