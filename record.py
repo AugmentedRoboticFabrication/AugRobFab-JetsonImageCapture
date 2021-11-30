@@ -4,7 +4,7 @@ import RPi.GPIO as GPIO
 import open3d as o3d
 
 class azureKinectMKVRecorder:
-	def __init__(self, fn, gui, key, rec_config, out_dir):
+	def __init__(self, fn, gui, rec_config, out_dir):
 		# GPIO config
 		GPIO.setmode(GPIO.BOARD)
 		GPIO.setup(15, GPIO.IN)
@@ -19,7 +19,7 @@ class azureKinectMKVRecorder:
 		self.gui = gui
 		self.key = key
 		if self.gui:
-			self.vis = o3d.visualization.Visualizer()
+			self.vis = o3d.visualization.VisualizerWithKeyCallback()
 
 		#OS variables
 		self.fn = fn
@@ -46,7 +46,7 @@ class azureKinectMKVRecorder:
 					os.mkdir('{}/{}'.format(self.dir,fn))
 				self.recorder.open_record("{}/{}/capture.mkv".format(self.dir,fn))
 			print('%s recording started' % fn)
-	def end(self, vis):
+	def end(self):
 		if self.recorder.is_record_created():
 			self.recorder.close_record()
 		if self.gui:
@@ -55,7 +55,7 @@ class azureKinectMKVRecorder:
 		self.counter = 0
 		return False
 
-	def frame(self, vis):
+	def frame(self):
 		print("Recording frame %03d..."%self.counter, end="")
 		rgbd = self.recorder.record_frame(True,self.align)
 		print("Done!")
@@ -67,7 +67,8 @@ class azureKinectMKVRecorder:
 			self.vis.update_geometry(rgbd)
 			self.vis.update_renderer()
 
-		
+	def exit(self, vis):
+		self.isRunning = False
 
 		self.counter+=1
 		return False
@@ -77,8 +78,7 @@ class azureKinectMKVRecorder:
 	def run(self):
 		if self.gui:
 			if self.key:
-				self.vis.register_key_callback(32, self.frame)
-				self.vis.register_key_callback(256, self.end)
+				self.vis.register_key_callback(256, self.exit)
 
 			self.vis.create_window()
 		
@@ -86,12 +86,12 @@ class azureKinectMKVRecorder:
 			pin15 = GPIO.input(15)
 			pin16 = GPIO.input(16)
 			
-			print('Init complete. Waiting for DO Signal.')
+			print('*Waiting for DO Signal*')
 			while self.isRunning:
 				curPin15 = GPIO.input(15)
 				curPin16 = GPIO.input(16)
 
-				if self.gui and self.key:
+				if self.gui:
 					self.vis.poll_events()
 				if self.isRecording:
 					# if pin15 0->1 | DO 1->0 (end recording)
@@ -125,12 +125,11 @@ if __name__ == '__main__':
 	parser = ArgParser()
 	parser.add('--fn', default='capture')
 	parser.add('--gui', action='store_true')
-	parser.add('--keyInput', action='store_true')
 	parser.add('--rec_config', help='relative path to rec_config.json file.', default='rec_config.json')
 	parser.add('--out_dir', default=None)
 
 	config = parser.parse_args()
 
-	recorder = azureKinectMKVRecorder(config.fn, config.gui, config.keyInput, config.rec_config, config.out_dir)
+	recorder = azureKinectMKVRecorder(config.fn, config.gui, config.rec_config, config.out_dir)
 	recorder.run()
 
