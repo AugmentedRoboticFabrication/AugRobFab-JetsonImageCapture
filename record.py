@@ -5,6 +5,7 @@ import open3d as o3d
 
 class azureKinectMKVRecorder:
 	def __init__(self, fn, gui, rec_config):
+		print('---------------')
 		# GPIO config
 		GPIO.setmode(GPIO.BOARD)
 		GPIO.setup(15, GPIO.IN)
