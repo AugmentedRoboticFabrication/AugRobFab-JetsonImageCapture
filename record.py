@@ -41,6 +41,8 @@ class azureKinectMKVRecorder:
 	def start(self):
 			if not self.recorder.is_record_created():
 				fn = self.fn + '_%d' % round(time.time())
+				if not os.path.exists('{}/{}'.format(self.dir,fn)):
+					os.mkdir('{}/{}'.format(self.dir,fn))
 				self.recorder.open_record("{}/{}/capture.mkv".format(self.dir,fn))
 
 	def end(self, vis):
