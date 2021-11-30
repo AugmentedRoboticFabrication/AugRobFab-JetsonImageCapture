@@ -33,15 +33,16 @@ class azureKinectMKVRecorder:
 		
 		self.align = True
 
-
-	def exit_callback(self, vis):
+	def start(self):
+		pass
+	def end(self, vis):
 		if self.recorder.is_record_created():
 			self.recorder.close_record()
 			self.record = False
 		self.isRunning = False
 		return False
 
-	def record_callback(self, vis):
+	def frame(self, vis):
 		if not self.recorder.is_record_created():
 			if self.recorder.open_record("{}/{}/capture.mkv".format(self.dir,self.fn)):
 				self.record = True
@@ -66,8 +67,8 @@ class azureKinectMKVRecorder:
 
 	def run(self):
 		if self.gui:
-			self.vis.register_key_callback(32, self.record_callback)
-			self.vis.register_key_callback(256, self.exit_callback)
+			self.vis.register_key_callback(32, self.frame)
+			self.vis.register_key_callback(256, self.end)
 
 			self.vis.create_window()
 
