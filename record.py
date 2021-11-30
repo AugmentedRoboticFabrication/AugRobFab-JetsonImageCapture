@@ -25,7 +25,7 @@ class azureKinectMKVRecorder:
 		self.root = os.getcwd()
 		self.out_dir = None
 
-		if not os.path.exists('%s/out' % self.root,self.out_dir):
+		if not os.path.exists('%s/out' % self.root):
 			os.mkdir('%s/out' % self.root)
 		
 		# External Backup Config
