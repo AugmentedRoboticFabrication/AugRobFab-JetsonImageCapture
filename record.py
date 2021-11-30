@@ -17,6 +17,7 @@ class azureKinectMKVRecorder:
 		
 		#GUI
 		self.gui = gui
+		self.key = key
 		if self.gui:
 			self.vis = o3d.visualization.VisualizerWithKeyCallback()
 
