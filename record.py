@@ -5,6 +5,7 @@ import open3d as o3d
 
 class azureKinectMKVRecorder:
 	def __init__(self, fn, gui, key, rec_config, out_dir):
+		# GPIO config
 		GPIO.setmode(GPIO.BOARD)
 		GPIO.setup(15, GPIO.IN)
 		GPIO.setup(16, GPIO.IN)
@@ -12,14 +13,13 @@ class azureKinectMKVRecorder:
 		#Global variables
 		self.isRunning = True
 		self.isRecording = False
-
 		self.counter = 0
 		
 		#GUI
 		self.gui = gui
 		self.key = key
 		if self.gui:
-			self.vis = o3d.visualization.VisualizerWithKeyCallback()
+			self.vis = o3d.visualization.Visualizer()
 
 		#OS variables
 		self.fn = fn
