@@ -62,17 +62,15 @@ class azureKinectMKVRecorder:
 
 	def run(self):
 		if self.gui:
+			self.vis.register_key_callback(32, self.frame)
+			self.vis.register_key_callback(256, self.exit)
+
 			self.vis.create_window()#'recorder', 1920, 540)
 
 		while True:
 			try:
 				if self.gui:
 					self.vis.poll_events()
-				else:
-					if keyboard.is_pressed('space'):
-						self.frame(None)
-					if keyboard.is_pressed('escape'):
-						self.exit(None)
 			except KeyboardInterrupt:
 				pass
 				# GPIO.cleanup()
