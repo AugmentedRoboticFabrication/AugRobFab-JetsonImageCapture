@@ -1,4 +1,4 @@
-import os, datetime
+import os, time
 from configargparse import ArgParser
 import RPi.GPIO as GPIO
 import open3d as o3d
@@ -87,7 +87,7 @@ class azureKinectMKVRecorder:
 			while self.isRunning:
 				curPin15 = GPIO.input(15)
 				curPin16 = GPIO.input(16)
-				
+
 				if self.gui:
 					self.vis.poll_events()
 				if self.isRecording:
