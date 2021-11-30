@@ -62,7 +62,7 @@ if __name__ == '__main__':
 
 					rgbd = recorder.frame(record=False)
 
-					vis = o3d.visualization.Visualizer()
+					vis = o3d.visualization.VisualizerWithKeyCallback()
 					vis.create_window()
 					vis.add_geometry(rgbd)
 					vis.update_renderer()
