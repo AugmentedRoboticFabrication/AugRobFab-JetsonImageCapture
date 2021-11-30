@@ -69,11 +69,16 @@ class azureKinectMKVRecorder:
 			self.vis.register_key_callback(32, self.record_callback)
 			self.vis.register_key_callback(256, self.exit_callback)
 
-			self.vis.create_window()#'recorder', 1920, 540)
+			self.vis.create_window()
 
 		while self.isRunning:
-			if self.gui:
-				self.vis.poll_events()
+			try:
+				if self.gui:
+					self.vis.poll_events()
+			except KeyboardInterrupt:
+				print('\nBye!')
+			except Exception as e:
+				print(e)
 		self.recorder.close_record()
 
 if __name__ == '__main__':
