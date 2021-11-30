@@ -28,7 +28,8 @@ class azureKinectMKVRecorder:
 		# External Backup Config
 		self.copy_root = None
 		mediaList = os.listdir('/media/nano')
-		mediaList.remove('L4T-README')
+		if 'L4T-README' is in mediaList:
+			mediaList.remove('L4T-README')
 		if len(mediaList) == 0:
 			print('No External USB storage device found. Falling back to CWD.')
 		elif len(mediaList) == 1:
