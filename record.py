@@ -6,7 +6,7 @@ import open3d as o3d
 class azureKinectMKVRecorder:
 	def __init__(self, fn, gui, rec_config, out_dir):
 		#Global variables
-		self.exit = False
+		self.isRunning = True
 		self.record = False
 		self.counter = 0
 		
@@ -38,7 +38,7 @@ class azureKinectMKVRecorder:
 		if self.recorder.is_record_created():
 			self.recorder.close_record()
 			self.record = False
-		self.exit = True
+		self.isRunning = False
 		return False
 
 	def record_callback(self, vis):
@@ -71,7 +71,7 @@ class azureKinectMKVRecorder:
 
 			self.vis.create_window()#'recorder', 1920, 540)
 
-		while not self.exit:
+		while self.isRunning:
 			if self.gui:
 				self.vis.poll_events()
 		self.recorder.close_record()
