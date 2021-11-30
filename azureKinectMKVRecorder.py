@@ -27,7 +27,7 @@ class Recorder:
 		self.counter = 0
 		if self.gui:
 			self.vis = o3d.visualization.VisualizerWithKeyCallback()
-			self.vis.create_window("Azure Kinect")
+			self.vis.create_window("Azure Kinect | ForMat Lab")
 
 		if not self.recorder.is_record_created():
 			if not os.path.exists('{}/{}'.format(self.dir,fn)):
@@ -45,8 +45,8 @@ class Recorder:
 			if not self.vis_geometry_added:
 				self.vis.add_geometry(rgbd)
 				self.vis_geometry_added = True
-			else:
-				self.vis.update_geometry(rgbd)
+
+			self.vis.update_geometry(rgbd)
 			self.vis.update_renderer()
 
 		self.counter += 1
@@ -60,6 +60,8 @@ class Recorder:
 		if self.gui:
 			self.vis.destroy_window()
 			self.vis = None
+			
+			self.vis_geometry_added = False
 		
 		self.counter = 0
 		
