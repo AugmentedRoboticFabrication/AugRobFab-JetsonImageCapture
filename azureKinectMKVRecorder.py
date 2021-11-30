@@ -39,12 +39,13 @@ class Recorder:
 
 		
 
-	def recordFrame(self):
+	def frame(self, record=True):
 		print('Recording frame %03d...'% self.counter, end='')		
-		rgbd = self.recorder.record_frame(True, self.align)
+		rgbd = self.recorder.record_frame(record, self.align)
 		print('Done!')
 		
-		self.counter += 1
+		if record:
+			self.counter += 1
 		
 		# if self.gui:
 		# 	self.vis.update_geometry(rgbd)

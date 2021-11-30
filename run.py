@@ -59,13 +59,14 @@ if __name__ == '__main__':
 				if pin15 and not curPin15:
 					fn = config.fn + '_%d' % round(time.time())
 					recorder.start(fn)
+
 					rgbd = recorder.frame(record=False)
+
 					vis = o3d.visualization.Visualizer()
-					
 					vis.create_window()
 					vis.add_geometry(rgbd)
 					vis.update_renderer()
-					
+
 					isRecording = True
 
 			pin15 = curPin15
