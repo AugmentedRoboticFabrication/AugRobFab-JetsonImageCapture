@@ -114,6 +114,6 @@ if __name__ == '__main__':
 	except KeyboardInterrupt:
 		GPIO.cleanup()
 		print('\nKeyboard Interrupt.')
-	except:
+	except Exception as e:
 		GPIO.cleanup()
-		print('Bye!')
+		print(e)
