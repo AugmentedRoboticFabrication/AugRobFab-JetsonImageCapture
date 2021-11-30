@@ -1,12 +1,13 @@
-import os, time
-import RPi.GPIO as GPIO
-import open3d as o3d
+import os, datetime, keyboard
 from configargparse import ArgParser
+
+import open3d as o3d
 
 class azureKinectMKVRecorder:
 	def __init__(self, fn, gui, rec_config, out_dir):
 		#Global variables
-		self.isRunning = True
+		self.exit = False
+		self.record = False
 		self.counter = 0
 		
 		#GUI
@@ -33,14 +34,17 @@ class azureKinectMKVRecorder:
 		self.align = True
 
 
-	def exit(self, vis):
+	def exit_callback(self, vis):
 		if self.recorder.is_record_created():
 			self.recorder.close_record()
-		self.isRunning = False
+			self.record = False
+		self.exit = True
+		return False
 
-	def frame(self, vis):
+	def record_callback(self, vis):
 		if not self.recorder.is_record_created():
-			self.recorder.open_record("{}/{}/capture.mkv".format(self.dir,self.fn))
+			if self.recorder.open_record("{}/{}/capture.mkv".format(self.dir,self.fn)):
+				self.record = True
 
 		print("Recording frame %03d..."%self.counter, end="")
 		rgbd = self.recorder.record_frame(True,self.align)
@@ -62,28 +66,25 @@ class azureKinectMKVRecorder:
 
 	def run(self):
 		if self.gui:
-			self.vis.register_key_callback(32, self.frame)
-			self.vis.register_key_callback(256, self.exit)
+			self.vis.register_key_callback(32, self.record_callback)
+			self.vis.register_key_callback(256, self.exit_callback)
 
 			self.vis.create_window()#'recorder', 1920, 540)
 
-		while self.isRunning:
-			try:
-				if self.gui:
-					self.vis.poll_events()
-			except KeyboardInterrupt:
-				pass
-				# GPIO.cleanup()
+		while not self.exit:
+			if self.gui:
+				self.vis.poll_events()
+		self.recorder.close_record()
 
 if __name__ == '__main__':
 	parser = ArgParser()
-	parser.add('--fn', default='capture')
+	parser.add('--fn', default='capture_{date:%Y-%m-%d-%H-%M-%S}'.format(date=datetime.datetime.now()))
 	parser.add('--gui', action='store_true')
 	parser.add('--rec_config', help='relative path to rec_config.json file.', default='rec_config.json')
 	parser.add('--out_dir', default=None)
 
 	config = parser.parse_args()
 
-	recorder = azureKinectMKVRecorder(config.fn, config.gui, config.rec_config, config.out_dir)
+	recorder = azureKinectMKVRecorder(config.fn, config.no_gui, config.rec_config, config.out_dir)
 	recorder.run()
 
