@@ -99,7 +99,7 @@ class azureKinectMKVRecorder:
 		if self.gui:
 			self.vis.register_key_callback(256, self.exit)
 
-			self.vis.create_window()
+			self.vis.create_window("Augmented Fabrication | ForMat Lab")
 		
 		try:
 			pin15 = GPIO.input(15)
