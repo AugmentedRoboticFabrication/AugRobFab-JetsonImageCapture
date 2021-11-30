@@ -44,6 +44,7 @@ class Recorder:
 		if self.gui:
 			if not self.vis_geometry_added:
 				self.vis.add_geometry(rgbd)
+				self.vis_geometry_added = True
 			else:
 				self.vis.update_geometry(rgbd)
 			self.vis.update_renderer()
