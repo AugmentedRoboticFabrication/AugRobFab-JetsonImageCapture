@@ -40,6 +40,7 @@ class azureKinectMKVRecorder:
 			print('Found External USB storage device for backup: %s.' % mediaList[0])
 		else:
 			print('Multiple External USB storage devices found. Falling back to CWD.')
+		print('---------------')
 		
 		#Azure Config
 		self.rec_config = o3d.io.read_azure_kinect_sensor_config('%s/%s' % (self.root, rec_config))
