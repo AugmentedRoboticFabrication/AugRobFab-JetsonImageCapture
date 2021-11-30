@@ -85,6 +85,9 @@ class azureKinectMKVRecorder:
 			
 			print('Init complete. Waiting for DO Signal.')
 			while self.isRunning:
+				curPin15 = GPIO.input(15)
+				curPin16 = GPIO.input(16)
+				
 				if self.gui:
 					self.vis.poll_events()
 				if self.isRecording:
