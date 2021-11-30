@@ -95,13 +95,13 @@ class azureKinectMKVRecorder:
 				if self.isRecording:
 					# if pin15 0->1 | DO 1->0 (end recording)
 					if not pin15 and curPin15:
-						self.end()
+						self.end(None)
 						isRecording = False
 						print('---------------')
 
 					# if pin15=0 | DO 1 && pin16 1->0 (capture frame)
 					if not curPin15 and (pin16 and not curPin16):
-						self.frame()
+						self.frame(None)
 				else:
 					# if pin15 1->0 | DO 0->1 (start recording)
 					if pin15 and not curPin15:
