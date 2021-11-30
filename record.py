@@ -6,7 +6,7 @@ from configargparse import ArgParser
 class azureKinectMKVRecorder:
 	def __init__(self, fn, gui, rec_config, out_dir):
 		#Global variables
-		self.record = False
+		self.isRunning = True
 		self.counter = 0
 		
 		#GUI
@@ -36,11 +36,11 @@ class azureKinectMKVRecorder:
 	def exit(self, vis):
 		if self.recorder.is_record_created():
 			self.recorder.close_record()
+		self.isRunning = False
 
 	def frame(self, vis):
 		if not self.recorder.is_record_created():
-			if self.recorder.open_record("{}/{}/capture.mkv".format(self.dir,self.fn)):
-				self.record = True
+			self.recorder.open_record("{}/{}/capture.mkv".format(self.dir,self.fn))
 
 		print("Recording frame %03d..."%self.counter, end="")
 		rgbd = self.recorder.record_frame(True,self.align)
@@ -67,7 +67,7 @@ class azureKinectMKVRecorder:
 
 			self.vis.create_window()#'recorder', 1920, 540)
 
-		while True:
+		while self.isRunning:
 			try:
 				if self.gui:
 					self.vis.poll_events()
