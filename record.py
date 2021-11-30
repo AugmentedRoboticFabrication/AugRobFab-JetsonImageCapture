@@ -4,7 +4,7 @@ import RPi.GPIO as GPIO
 import open3d as o3d
 
 class azureKinectMKVRecorder:
-	def __init__(self, fn, gui, rec_config, out_dir):
+	def __init__(self, fn, gui, key, rec_config, out_dir):
 		GPIO.setmode(GPIO.BOARD)
 		GPIO.setup(15, GPIO.IN)
 		GPIO.setup(16, GPIO.IN)
@@ -75,8 +75,9 @@ class azureKinectMKVRecorder:
 
 	def run(self):
 		if self.gui:
-			self.vis.register_key_callback(32, self.frame)
-			self.vis.register_key_callback(256, self.end)
+			if self.key:
+				self.vis.register_key_callback(32, self.frame)
+				self.vis.register_key_callback(256, self.end)
 
 			self.vis.create_window()
 		
@@ -89,7 +90,7 @@ class azureKinectMKVRecorder:
 				curPin15 = GPIO.input(15)
 				curPin16 = GPIO.input(16)
 
-				if self.gui:
+				if self.gui and self.key:
 					self.vis.poll_events()
 				if self.isRecording:
 					# if pin15 0->1 | DO 1->0 (end recording)
@@ -129,6 +130,6 @@ if __name__ == '__main__':
 
 	config = parser.parse_args()
 
-	recorder = azureKinectMKVRecorder(config.fn, config.gui, config.rec_config, config.out_dir)
+	recorder = azureKinectMKVRecorder(config.fn, config.gui, config.keyInput, config.rec_config, config.out_dir)
 	recorder.run()
 
