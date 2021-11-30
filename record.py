@@ -44,17 +44,14 @@ class azureKinectMKVRecorder:
 					os.mkdir('{}/{}'.format(self.dir,fn))
 				self.recorder.open_record("{}/{}/capture.mkv".format(self.dir,fn))
 			print('Starting Recording: %s' % fn)
-
-			self.vis.create_window("Azure Kinect | ForMat Lab")
-
 	def end(self):
 		if self.recorder.is_record_created():
 			self.recorder.close_record()
 		if self.gui:
-			# self.vis.clear_geometries()
+			self.vis.clear_geometries()
 			self.vis.destroy_window()
-			# self.vis.close()
 		self.counter = 0
+		return False
 
 	def frame(self):
 		print("Recording frame %03d..."%self.counter, end="")
@@ -79,6 +76,9 @@ class azureKinectMKVRecorder:
 	def run(self):
 		if self.gui:
 			self.vis.register_key_callback(256, self.exit)
+
+			self.vis.create_window()
+			self.vis.run()
 		
 		try:
 			pin15 = GPIO.input(15)
