@@ -51,8 +51,7 @@ class azureKinectMKVRecorder:
 		if self.gui:
 			self.vis.clear_geometries()
 			self.vis.close()
-
-		self.isRunning = False
+		self.counter = 0
 		return False
 
 	def frame(self, vis):
@@ -96,7 +95,7 @@ class azureKinectMKVRecorder:
 					# if pin15 0->1 | DO 1->0 (end recording)
 					if not pin15 and curPin15:
 						self.end(None)
-						isRecording = False
+						self.isRecording = False
 						print('---------------')
 
 					# if pin15=0 | DO 1 && pin16 1->0 (capture frame)
