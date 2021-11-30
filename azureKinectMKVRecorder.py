@@ -7,6 +7,7 @@ class Recorder:
 	def __init__(self, gui, rec_config):
 		self.counter = 0
 		self.gui = gui
+		self.vis = None
 
 		# OS Variables
 		self.dir = os.getcwd()
@@ -24,7 +25,7 @@ class Recorder:
 	def start(self, fn):
 		self.counter = 0
 		if self.gui:
-			self.vis = o3d.visualization.Visualizer()
+			self.vis = o3d.visualization.VisualizerWithKeyCallback()
 			self.vis.create_window("Azure Kinect")
 
 		if not self.recorder.is_record_created():
@@ -55,6 +56,7 @@ class Recorder:
 		
 		if self.gui:
 			self.vis.destroy_window()
+			self.vis = None
 		
 		self.counter = 0
 		
