@@ -1,13 +1,18 @@
-import os, datetime, keyboard
+import os, datetime
 from configargparse import ArgParser
-
+import RPi.GPIO as GPIO
 import open3d as o3d
 
 class azureKinectMKVRecorder:
 	def __init__(self, fn, gui, rec_config, out_dir):
+		GPIO.setmode(GPIO.BOARD)
+		GPIO.setup(15, GPIO.IN)
+		GPIO.setup(16, GPIO.IN)
+
 		#Global variables
 		self.isRunning = True
-		self.record = False
+		self.isRecording = False
+
 		self.counter = 0
 		
 		#GUI
@@ -40,13 +45,13 @@ class azureKinectMKVRecorder:
 	def end(self, vis):
 		if self.recorder.is_record_created():
 			self.recorder.close_record()
-			self.record = False
-
-		self.vis.close()
-		self.vis.clear_geometries()
+		if self.gui:
+			self.vis.close()
+			self.vis.clear_geometries()
 
 		self.isRunning = False
 		return False
+
 	def frame(self, vis):
 		print("Recording frame %03d..."%self.counter, end="")
 		rgbd = self.recorder.record_frame(True,self.align)
@@ -78,10 +83,11 @@ class azureKinectMKVRecorder:
 				if self.gui:
 					self.vis.poll_events()
 			except KeyboardInterrupt:
+				GPIO.cleanup()
 				print('\nBye!')
 			except Exception as e:
+				GPIO.cleanup()
 				print(e)
-		self.recorder.close_record()
 
 if __name__ == '__main__':
 	parser = ArgParser()
