@@ -40,14 +40,15 @@ class azureKinectMKVRecorder:
 
 	def start(self):
 			if not self.recorder.is_record_created():
-				self.recorder.open_record("{}/{}/capture.mkv".format(self.dir,self.fn))
+				fn = self.fn + '_%d' % round(time.time())
+				self.recorder.open_record("{}/{}/capture.mkv".format(self.dir,fn))
 
 	def end(self, vis):
 		if self.recorder.is_record_created():
 			self.recorder.close_record()
 		if self.gui:
-			self.vis.close()
 			self.vis.clear_geometries()
+			self.vis.close()
 
 		self.isRunning = False
 		return False
@@ -77,21 +78,47 @@ class azureKinectMKVRecorder:
 			self.vis.register_key_callback(256, self.end)
 
 			self.vis.create_window()
-		print('Init complete. Waiting for DO Signal.')
-		while self.isRunning:
-			try:
+		
+		try:
+			pin15 = GPIO.input(15)
+			pin16 = GPIO.input(16)
+			
+			print('Init complete. Waiting for DO Signal.')
+			while self.isRunning:
 				if self.gui:
 					self.vis.poll_events()
-			except KeyboardInterrupt:
-				GPIO.cleanup()
-				print('\nBye!')
-			except Exception as e:
-				GPIO.cleanup()
-				print(e)
+				if self.isRecording:
+					# if pin15 0->1 | DO 1->0 (end recording)
+					if not pin15 and curPin15:
+						self.recorder.end()
+						isRecording = False
+						print('---------------')
+
+					# if pin15=0 | DO 1 && pin16 1->0 (capture frame)
+					if not curPin15 and (pin16 and not curPin16):
+						self.recorder.recordFrame()
+				else:
+					# if pin15 1->0 | DO 0->1 (start recording)
+					if pin15 and not curPin15:
+						fn = config.fn + '_%d' % round(time.time())
+						self.recorder.start(fn)
+						self.isRecording = True
+
+				pin15 = curPin15
+				pin16 = curPin16
+
+				time.sleep(.1)
+
+		except KeyboardInterrupt:
+			GPIO.cleanup()
+			print('\nBye!')
+		except Exception as e:
+			GPIO.cleanup()
+			print(e)
 
 if __name__ == '__main__':
 	parser = ArgParser()
-	parser.add('--fn', default='capture_{date:%Y-%m-%d-%H-%M-%S}'.format(date=datetime.datetime.now()))
+	parser.add('--fn', default='capture')
 	parser.add('--gui', action='store_true')
 	parser.add('--rec_config', help='relative path to rec_config.json file.', default='rec_config.json')
 	parser.add('--out_dir', default=None)
