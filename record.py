@@ -65,9 +65,12 @@ class azureKinectMKVRecorder:
 		# Copy capture to external USB storage device
 		if self.copy_root is not None:
 			print("Backing up capture to %s..."% self.copy_root, end="")
-			shutil.copytree('%s/%s' % (self.root, self.out_dir),
+			if os.path.exists('%s/%s' % (self.copy_root, self.out_dir)):
+				shutil.copytree('%s/%s' % (self.root, self.out_dir),
 							'%s/%s' % (self.copy_root, self.out_dir))
-			print("Done!")
+				print("Done!")
+			else:
+				print("Failed!")
 		self.out_dir = None
 
 		return False
