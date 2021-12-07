@@ -1,0 +1,4 @@
+/out/
+*.mkv
+__pycache__/
+*.py[cod]
