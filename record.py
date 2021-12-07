@@ -66,15 +66,15 @@ class azureKinectMKVRecorder:
 	def end(self):
 		if self.recorder.is_record_created():
 			self.recorder.close_record()
-			# Copy capture to external USB storage device
-			if self.copy_root is not None:
-				print("Backing up capture to %s..." % self.copy_root, end="")
-				if os.path.exists(self.copy_root):
-					shutil.copytree('%s/out/%s' % (self.root, self.out_dir),
-								'%s/%s' % (self.copy_root, self.out_dir))
-					print("Done!")
-				else:
-					print("Failed!")
+			# # Copy capture to external USB storage device
+			# if self.copy_root is not None:
+			# 	print("Backing up capture to %s..." % self.copy_root, end="")
+			# 	if os.path.exists(self.copy_root):
+			# 		shutil.copytree('%s/out/%s' % (self.root, self.out_dir),
+			# 					'%s/%s' % (self.copy_root, self.out_dir))
+			# 		print("Done!")
+			# 	else:
+			# 		print("Failed!")
 		
 		if self.gui:
 			self.vis.clear_geometries()
