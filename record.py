@@ -108,7 +108,6 @@ class azureKinectMKVRecorder:
 	def run(self):
 		if self.gui:
 			self.vis.register_key_callback(256, self.exit)
-
 			self.vis.create_window("Augmented Fabrication | ForMat Lab")
 		
 		try:
