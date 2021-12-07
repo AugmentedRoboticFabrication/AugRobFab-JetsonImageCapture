@@ -4,17 +4,20 @@ import RPi.GPIO as GPIO
 import open3d as o3d
 
 class azureKinectMKVRecorder:
-	def __init__(self, fn, gui, rec_config):
-		print('---------------')
-		# GPIO config
-		GPIO.setmode(GPIO.BOARD)
-		GPIO.setup(15, GPIO.IN)
-		GPIO.setup(16, GPIO.IN)
-
+	def __init__(self, fn, gui, rec_config, cont):
 		#Global variables
 		self.isRunning = True
 		self.isRecording = False
 		self.counter = 0
+		self.cont = cont
+
+		print('---------------')
+		# GPIO config
+		GPIO.setmode(GPIO.BOARD)
+		GPIO.setup(15, GPIO.IN)
+		if not self.cont:
+			GPIO.setup(16, GPIO.IN)
+
 		
 		#GUI
 		self.gui = gui
@@ -117,7 +120,8 @@ class azureKinectMKVRecorder:
 				print('CTRL+C to exit.')
 			while self.isRunning:
 				curPin15 = GPIO.input(15)
-				curPin16 = GPIO.input(16)
+				if not self.cont:
+					curPin16 = GPIO.input(16)
 
 				if self.gui:
 					self.vis.poll_events()
@@ -127,8 +131,10 @@ class azureKinectMKVRecorder:
 						self.end()
 						self.isRecording = False
 
+					if self.cont:
+						self.frame()
 					# if pin15=0 | DO 1 && pin16 1->0 (capture frame)
-					if not curPin15 and (pin16 and not curPin16):
+					elif not curPin15 and (pin16 and not curPin16):
 						self.frame()
 				else:
 					# if pin15 1->0 | DO 0->1 (start recording)
@@ -138,7 +144,8 @@ class azureKinectMKVRecorder:
 						self.isRecording = True
 
 				pin15 = curPin15
-				pin16 = curPin16
+				if not self.cont:
+					pin16 = curPin16
 
 				time.sleep(.1)
 			GPIO.cleanup()
@@ -156,10 +163,11 @@ if __name__ == '__main__':
 	parser = ArgParser()
 	parser.add('--fn', default='capture')
 	parser.add('--gui', action='store_true')
+	parser.add('--cont', action='store_true')
 	parser.add('--rec_config', help='relative path to rec_config.json file.', default='rec_config.json')
 
 	config = parser.parse_args()
 
-	recorder = azureKinectMKVRecorder(config.fn, config.gui, config.rec_config)
+	recorder = azureKinectMKVRecorder(config.fn, config.gui, config.rec_config, config.cont)
 	recorder.run()
 
