@@ -15,6 +15,9 @@ class AzureKinectRecorder:
         self.resolution = self.get_color_resolution(resolution)
         self.fps = self.get_fps(fps)
         
+        # Initialize logging
+        logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+        
         self.camera = pyk4a.PyK4A(
             pyk4a.Config(
                 color_resolution=self.resolution,
@@ -25,8 +28,12 @@ class AzureKinectRecorder:
         )
         self.camera.start()
         
-        # Initialize logging
-        logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+        # Log the configuration details in a structured manner
+        logging.info('Camera Configuration:')
+        logging.info(f'    Resolution: {resolution}p')
+        logging.info(f'    Camera FOV Mode: {camera_mode.upper()}')
+        logging.info(f'    Binned Mode: {"Enabled" if binned else "Disabled"}')
+        logging.info(f'    FPS: {fps}')
 
     @staticmethod
     def get_depth_mode(camera_mode, binned):
@@ -84,17 +91,19 @@ class AzureKinectRecorder:
 
     def run(self):
         GPIO.setmode(GPIO.BOARD)
-        GPIO.setup(15, GPIO.IN)
-        GPIO.setup(16, GPIO.IN)
+        GPIO.setup(15, GPIO.IN, pull_up_down=GPIO.PUD_UP)  # Using pull-up as pins are activated from 1 to 0
+        GPIO.setup(16, GPIO.IN, pull_up_down=GPIO.PUD_UP)  # Using pull-up as pins are activated from 1 to 0
         
         try:
             while True:
                 if GPIO.input(15) == GPIO.LOW:
-                    timestamp = datetime.now().strftime('%m%d%y_%H-%M')
+                    timestamp = datetime.now().strftime('%y-%m-%d_%H-%M')
                     self.out_dir = os.path.join(self.fn, timestamp)
                     self.create_directory(self.out_dir)
                     frame_count = 0
                     last_state_pin16 = GPIO.input(16)
+                    
+                    logging.info(f'Session Started {timestamp}')
                     
                     while GPIO.input(15) == GPIO.LOW:
                         current_state_pin16 = GPIO.input(16)
@@ -105,6 +114,8 @@ class AzureKinectRecorder:
                                 frame_count += 1
                         last_state_pin16 = current_state_pin16
                         time.sleep(0.01)
+                    
+                logging.info(f'Session Ended {timestamp}')
         except KeyboardInterrupt:
             logging.info('Recording interrupted by user!')
         except Exception as e:
