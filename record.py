@@ -3,6 +3,7 @@ import time
 import cv2
 import argparse
 import pyk4a
+import json
 import Jetson.GPIO as GPIO
 import logging
 from datetime import datetime
@@ -34,7 +35,21 @@ class AzureKinectRecorder:
         logging.info(f'    Camera FOV Mode: {camera_mode.upper()}')
         logging.info(f'    Binned Mode: {"Enabled" if binned else "Disabled"}')
         logging.info(f'    FPS: {fps}')
+    
+    def write_intrinsic_matrix(self, out_dir, fn="intrinsic"):
+        tof_intrinsic_array = self.camera.calibration.get_camera_matrix(
+            pyk4a.calibration.CalibrationType.DEPTH)
+        tof_intrinsic_list = tof_intrinsic_array.flatten().tolist()
 
+        tof_distortion_array = self.camera.calibration.get_distortion_coefficients(
+            pyk4a.CalibrationType.DEPTH)
+        tof_distortion_list = tof_distortion_array.flatten().tolist()
+
+        data = {"intrinsic_matrix": tof_intrinsic_list, "distortion_coefficients": tof_distortion_list}
+        tmp_path = os.path.join(out_dir, f'{fn}.json')
+        with open(tmp_path, 'w') as f:
+            json.dump(data, f)
+        
     @staticmethod
     def get_depth_mode(camera_mode, binned):
         if camera_mode.lower() == "wfov":
@@ -70,7 +85,9 @@ class AzureKinectRecorder:
     def capture_frame(self, capture, frame_count):
         folders = ['color', 'transformed_color', 'depth', 'transformed_depth', 'ir']
         for folder in folders:
-            self.create_directory(os.path.join(self.out_dir, folder))
+            tmp_path = os.path.join(self.out_dir, folder)
+            if not os.path.exists(tmp_path):
+                self.create_directory(os.path.join(self.out_dir, folder))
 
         frame_types = {
             'color': capture.color,
@@ -91,31 +108,44 @@ class AzureKinectRecorder:
 
     def run(self):
         GPIO.setmode(GPIO.BOARD)
-        GPIO.setup(15, GPIO.IN, pull_up_down=GPIO.PUD_UP)  # Using pull-up as pins are activated from 1 to 0
-        GPIO.setup(16, GPIO.IN, pull_up_down=GPIO.PUD_UP)  # Using pull-up as pins are activated from 1 to 0
+        GPIO.setup(15, GPIO.IN)
+        GPIO.setup(16, GPIO.IN)
+        
+        session_active = False
+        timestamp = None
         
         try:
             while True:
-                if GPIO.input(15) == GPIO.LOW:
+                if GPIO.input(15) == GPIO.LOW and not session_active:
                     timestamp = datetime.now().strftime('%y-%m-%d_%H-%M')
                     self.out_dir = os.path.join(self.fn, timestamp)
                     self.create_directory(self.out_dir)
+
+                    self.write_intrinsic_matrix(self.out_dir)
+                    
                     frame_count = 0
-                    last_state_pin16 = GPIO.input(16)
                     
                     logging.info(f'Session Started {timestamp}')
                     
+                    last_state_pin16 = GPIO.input(16)
+                    session_active = True
+
                     while GPIO.input(15) == GPIO.LOW:
                         current_state_pin16 = GPIO.input(16)
                         if last_state_pin16 == GPIO.HIGH and current_state_pin16 == GPIO.LOW:
                             capture = self.camera.get_capture()
                             if capture:
                                 self.capture_frame(capture, frame_count)
+                                logging.info(f'Frame {frame_count} captured')
                                 frame_count += 1
                         last_state_pin16 = current_state_pin16
                         time.sleep(0.01)
+
+                elif session_active:
+                    logging.info(f'Session Ended {timestamp}')
+                    session_active = False
                     
-                logging.info(f'Session Ended {timestamp}')
+                time.sleep(0.01)
         except KeyboardInterrupt:
             logging.info('Recording interrupted by user!')
         except Exception as e:
@@ -127,7 +157,6 @@ class AzureKinectRecorder:
         self.camera.stop()
         GPIO.cleanup()
         logging.info('Camera Stopped and GPIO Cleaned')
-
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Azure Kinect Recorder.')
