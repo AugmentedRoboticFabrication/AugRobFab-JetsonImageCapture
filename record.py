@@ -4,6 +4,7 @@ import cv2
 import argparse
 import pyk4a
 import json
+import numpy as np
 import Jetson.GPIO as GPIO
 import logging
 from datetime import datetime
@@ -99,8 +100,8 @@ class AzureKinectRecorder:
 
         try:
             for frame_type, frame in frame_types.items():
-                file_path = os.path.join(self.out_dir, frame_type, f'{frame_type}_{frame_count}.png')
                 cv2.imwrite(file_path, frame)
+                file_path = os.path.join(self.out_dir, frame_type, f'{frame_type}_{frame_count:03}.png')
 
             logging.info(f'Frame {frame_count} Captured')
         except Exception as e:
