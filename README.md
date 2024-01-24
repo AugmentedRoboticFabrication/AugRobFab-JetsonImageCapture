@@ -1,5 +1,5 @@
 
-# Image Capture Module
+# Jetson Image Capture Module
 
 For complete system functionality, refer to the [Augmented Robotic Fabrication](https://github.com/AugmentedRoboticFabrication) repository.
 
