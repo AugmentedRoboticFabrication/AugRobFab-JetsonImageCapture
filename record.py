@@ -8,7 +8,8 @@ import numpy as np
 import Jetson.GPIO as GPIO
 import logging
 from datetime import datetime
-
+import queue
+import threading
 
 class AzureKinectRecorder:
     def __init__(self, fn, camera_mode, binned, resolution, fps):
@@ -37,21 +38,24 @@ class AzureKinectRecorder:
         logging.info(f'    Binned Mode: {"Enabled" if binned else "Disabled"}')
         logging.info(f'    FPS: {fps}')
         logging.info('Ready!')
+
+        # Initialize frame queue and stop event
+        self.save_thread - None
+        self.frame_queue = queue.Queue()
+        self.stop_event = threading.Event()
     
     def write_intrinsic_matrix(self, out_dir, fn="intrinsic"):
-        tof_intrinsic_array = self.camera.calibration.get_camera_matrix(
-            pyk4a.calibration.CalibrationType.DEPTH)
+        tof_intrinsic_array = self.camera.calibration.get_camera_matrix(pyk4a.calibration.CalibrationType.DEPTH)
         tof_intrinsic_list = tof_intrinsic_array.flatten().tolist()
 
-        tof_distortion_array = self.camera.calibration.get_distortion_coefficients(
-            pyk4a.CalibrationType.DEPTH)
+        tof_distortion_array = self.camera.calibration.get_distortion_coefficients(pyk4a.CalibrationType.DEPTH)
         tof_distortion_list = tof_distortion_array.flatten().tolist()
 
         data = {"intrinsic_matrix": tof_intrinsic_list, "distortion_coefficients": tof_distortion_list}
         tmp_path = os.path.join(out_dir, f'{fn}.json')
         with open(tmp_path, 'w') as f:
             json.dump(data, f)
-        
+
     @staticmethod
     def get_depth_mode(camera_mode, binned):
         if camera_mode.lower() == "wfov":
@@ -108,6 +112,14 @@ class AzureKinectRecorder:
         except Exception as e:
             logging.error(f'Error capturing frame: {e}')
 
+    def save_frames_worker(self):
+        while not self.stop_event.is_set() or not self.frame_queue.empty():
+            try:
+                frame_data = self.frame_queue.get(timeout=1)  # Adjust timeout as needed
+                self.capture_frame(*frame_data)
+            except queue.Empty:
+                continue
+
     def run(self):
         GPIO.setmode(GPIO.BOARD)
         GPIO.setup(15, GPIO.IN)
@@ -116,6 +128,11 @@ class AzureKinectRecorder:
         session_active = False
         timestamp = None
         
+        # Start the save frames thread
+        if self.save_thread is None:
+            self.save_thread = threading.Thread(target=self.save_frames_worker)
+            self.save_thread.start()
+
         try:
             while True:
                 if GPIO.input(15) == GPIO.LOW and not session_active:
@@ -137,7 +154,7 @@ class AzureKinectRecorder:
                         if last_state_pin16 == GPIO.HIGH and current_state_pin16 == GPIO.LOW:
                             capture = self.camera.get_capture()
                             if capture:
-                                self.capture_frame(capture, frame_count)
+                                self.frame_queue.put((capture, frame_count))
                                 frame_count += 1
                         last_state_pin16 = current_state_pin16
                         time.sleep(0.01)
@@ -154,7 +171,10 @@ class AzureKinectRecorder:
         finally:
             self.end()
 
-    def end(self):
+    def end(self, save_thread):
+        self.stop_event.set()
+        if self.save_thread is not None:
+            self.save_thread.join()
         self.camera.stop()
         GPIO.cleanup()
         logging.info('Camera Stopped and GPIO Cleaned')
