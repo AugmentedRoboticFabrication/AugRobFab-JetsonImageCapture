@@ -171,7 +171,7 @@ class AzureKinectRecorder:
         finally:
             self.end()
 
-    def end(self, save_thread):
+    def end(self):
         self.stop_event.set()
         if self.save_thread is not None:
             self.save_thread.join()
