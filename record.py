@@ -32,10 +32,11 @@ class AzureKinectRecorder:
         
         # Log the configuration details in a structured manner
         logging.info('Camera Configuration:')
-        logging.info(f'    Resolution: {resolution}p')
+        logging.info(f'    Color Resolution: {resolution}p')
         logging.info(f'    Camera FOV Mode: {camera_mode.upper()}')
         logging.info(f'    Binned Mode: {"Enabled" if binned else "Disabled"}')
         logging.info(f'    FPS: {fps}')
+        logging.info('Camera Ready!')
     
     def write_intrinsic_matrix(self, out_dir, fn="intrinsic"):
         tof_intrinsic_array = self.camera.calibration.get_camera_matrix(
