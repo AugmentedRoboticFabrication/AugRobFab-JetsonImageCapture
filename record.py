@@ -36,7 +36,7 @@ class AzureKinectRecorder:
         logging.info(f'    Camera FOV Mode: {camera_mode.upper()}')
         logging.info(f'    Binned Mode: {"Enabled" if binned else "Disabled"}')
         logging.info(f'    FPS: {fps}')
-        logging.info('Camera Ready!')
+        logging.info('Ready!')
     
     def write_intrinsic_matrix(self, out_dir, fn="intrinsic"):
         tof_intrinsic_array = self.camera.calibration.get_camera_matrix(
@@ -138,7 +138,6 @@ class AzureKinectRecorder:
                             capture = self.camera.get_capture()
                             if capture:
                                 self.capture_frame(capture, frame_count)
-                                logging.info(f'Frame {frame_count} captured')
                                 frame_count += 1
                         last_state_pin16 = current_state_pin16
                         time.sleep(0.01)
