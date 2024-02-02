@@ -40,7 +40,7 @@ class AzureKinectRecorder:
         logging.info('Ready!')
 
         # Initialize frame queue and stop event
-        self.save_thread - None
+        self.save_thread = None
         self.frame_queue = queue.Queue()
         self.stop_event = threading.Event()
     
