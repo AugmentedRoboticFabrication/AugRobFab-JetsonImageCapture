@@ -119,8 +119,8 @@ class AzureKinectRecorder:
                 file_path = os.path.join(self.out_dir, frame_type, f'{frame_type}_{frame_count:03}.png')
                 cv2.imwrite(file_path, frame)
                 
-                logging.info(f'Frame {frame_count} Captured')
-                
+            logging.info(f'Frame {frame_count} Captured')
+
         except Exception as e:
             logging.error(f'Error capturing frame: {e}')
 
