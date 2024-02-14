@@ -27,7 +27,7 @@ class AzureKinectRecorder:
         self.camera = pyk4a.PyK4A(
             pyk4a.Config(
                 color_resolution=self.get_color_resolution(self.resolution),
-                depth_mode=self.get_color_resolution(self.resolution),
+                depth_mode=self.get_depth_mode(self.camera_fov, self.binned),
                 camera_fps=self.get_fps(self.fps),
                 color_format=pyk4a.ImageFormat.COLOR_BGRA32,
             )
