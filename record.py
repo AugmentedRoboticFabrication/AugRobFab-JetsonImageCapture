@@ -219,7 +219,7 @@ if __name__ == '__main__':
     parser.add_argument('--fn', default='capture', help='Filename for saving the capture. If not provided, "capture" will be used.')
     parser.add_argument('--camera_fov', default='nfov', choices=['wfov', 'nfov'], help='Camera FOV Mode [Default = nfov]')
     parser.add_argument('--binned', action='store_true', help='2x2 Sensor Binning [Default = False]')
-    parser.add_argument('--resolution', type=int, default=3072, help='Color Image Resolution [Default = 3072]')
+    parser.add_argument('--resolution', type=int, default=720, help='Color Image Resolution [Default = 3072]')
     parser.add_argument('--fps', type=int, default=15, help='Frames per Second [Default = 15]')
     
     args = parser.parse_args()
