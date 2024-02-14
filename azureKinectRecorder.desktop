@@ -1,8 +1,0 @@
-[Desktop Entry]
-Version=1.0
-Name=AzureKinectRecorder
-Exec=gnome-terminal -- bash -c "cd /home/nano/azureKinect/ && python3 record.py"
-Icon=utilities-terminal
-Terminal=true
-Type=Application
-Categories=Application;
