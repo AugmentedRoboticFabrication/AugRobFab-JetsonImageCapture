@@ -1,3 +1,5 @@
+/capture/
+/captures/
 /out/
 *.mkv
 __pycache__/
